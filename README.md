@@ -3,7 +3,7 @@
 Este proyecto proporciona una guía para el despliegue de InfluxDB 2 y Telegraf utilizando contenedores de Podman o Docker. A continuación, se detallan los pasos para configurar el entorno, crear una red y ejecutar los contenedores necesarios.
 
 ## Prerrequisitos
-1. [Instalar Podman](https://podman.io/getting-started/installation) o [Docker](https://docs.docker.com/get-docker/)
+1. Instalar Podman o Docker
 2. Asegúrate de que tu entorno esté correctamente configurado para ejecutar contenedores.
 
 ## Pasos para el despliegue
@@ -15,20 +15,12 @@ Crea una red para que los contenedores se comuniquen entre sí:
 podman network create mi-red
 ```
 
-Si estás utilizando Docker, el comando equivalente sería:
-
-```bash
-docker network create mi-red
-```
-
 ### 2. Desplegar InfluxDB 2
 Ejecuta el siguiente comando para iniciar un contenedor con InfluxDB 2:
 
 ```bash
 podman run --name influxdb2 -d --network=mi-red -p 8086:8086   -v "$PWD/data:/var/lib/influxdb2"   -v "$PWD/config:/etc/influxdb2"   -e DOCKER_INFLUXDB_INIT_MODE=setup   -e DOCKER_INFLUXDB_INIT_USERNAME=admin   -e DOCKER_INFLUXDB_INIT_PASSWORD=admin_hello_1234   -e DOCKER_INFLUXDB_INIT_ORG=DAR   -e DOCKER_INFLUXDB_INIT_BUCKET=hello-dar   -e DOCKER_INFLUXDB_INIT_RETENTION=30d   -e DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=1xtZbx1bAe   docker.io/influxdb:2.7.5-alpine
 ```
-
-Si estás utilizando Docker, puedes ejecutar el mismo comando reemplazando `podman` por `docker`.
 
 ### 3. Crear el archivo de configuración `telegraf.conf`
 Crea un archivo llamado `telegraf.conf` en el directorio de trabajo y agrega la siguiente configuración:
@@ -72,12 +64,6 @@ Ejecuta el siguiente comando para iniciar un contenedor con Telegraf:
 
 ```bash
 podman run --name telegraf -d --network=mi-red   -v "$PWD/telegraf.conf:/etc/telegraf/telegraf.conf:ro"   -u telegraf   docker.io/telegraf:1.30.1-alpine
-```
-
-Si estás utilizando Docker, el comando equivalente sería:
-
-```bash
-docker run --name telegraf -d --network=mi-red   -v "$PWD/telegraf.conf:/etc/telegraf/telegraf.conf:ro"   -u telegraf   docker.io/telegraf:1.30.1-alpine
 ```
 
 ### 5. Verificar el funcionamiento
