@@ -59,6 +59,36 @@ Crea un archivo llamado `telegraf.conf` en el directorio de trabajo y agrega la 
   bucket = "hello-dar"
 ```
 
+### Detalles de la Configuración de Telegraf
+
+1. **[agent]**: 
+   - **interval**: Intervalo de recopilación de datos. Configurado en `10s`, lo que significa que cada 10 segundos se recogen nuevas métricas.
+   - **round_interval**: Si es verdadero, redondea la marca de tiempo al intervalo más cercano.
+   - **metric_batch_size**: Tamaño del lote de métricas para enviar a la salida.
+   - **metric_buffer_limit**: Límite del búfer para métricas.
+   - **collection_jitter**: Evita que las instancias recopilen métricas todas al mismo tiempo.
+   - **flush_interval**: Intervalo para enviar las métricas a la salida.
+   - **flush_jitter**: Agrega un pequeño retardo para evitar congestión.
+
+2. **[inputs]**: Sección donde especificamos los plugins de entrada para las métricas:
+   - **cpu**: Recopila estadísticas del uso de CPU.
+     - **percpu**: Establecido en `true` para reportar estadísticas de CPU por núcleo.
+     - **totalcpu**: Recopila las estadísticas de CPU a nivel del sistema.
+     - **collect_cpu_time**: Recopila métricas de tiempo de CPU si está en `true`.
+     - **report_active**: Informa sobre la suma de todos los estados no inactivos.
+
+   - **net**: Recopila métricas sobre interfaces de red.
+
+   - **disk**: Recopila métricas sobre el uso de discos por punto de montaje.
+     - **ignore_fs**: Lista de sistemas de archivos a ignorar.
+
+3. **[outputs]**:
+   - **influxdb_v2**: Configuración para la salida a InfluxDB 2.x.
+     - **urls**: URL de la instancia de InfluxDB.
+     - **token**: Token de autenticación.
+     - **organization**: Nombre de la organización para InfluxDB.
+     - **bucket**: Bucket en el cual almacenar los datos.
+
 ### 4. Desplegar Telegraf
 Ejecuta el siguiente comando para iniciar un contenedor con Telegraf:
 
